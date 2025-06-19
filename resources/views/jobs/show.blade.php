@@ -5,7 +5,9 @@
     <h2><strong>{{ $job['title'] }}</strong></h2>
     <p>Location: {{ $job['location'] }}</p>
     <p>Salary: {{$job['salary']}}</p>
+    @can('edit-job', $job)
     <p>
         <x-button href="/jobs/{{$job->id}}/edit">Edit Job</x-button>
     </p>
+    @endcan
 </x-layout>
