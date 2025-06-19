@@ -13,7 +13,10 @@ class JobController extends Controller
 {
     public function index()
     {
-        $job = Job::with('employer')->latest()->Paginate(5);
+        $job = Job::with('employer')
+            ->orderByDesc('id')
+            ->paginate(10);
+
         return view('jobs.index', ['jobs' => $job]);
     }
     public function create()
@@ -34,7 +37,7 @@ class JobController extends Controller
         Job::create([
             'title' => request('title'),
             'salary' => request('salary'),
-            'employer_id' => 1,
+            'employer_id' => auth()->user(),
             'description' => request('description'),
             'location' => '',
         ]);
@@ -42,7 +45,9 @@ class JobController extends Controller
     }
     public function edit(Job $job)
     {
-        //Gate::authorize('edit-job', $job);
+        // if(Auth::user()->cannot('edit-job', $job))
+        //     abort(403);
+        // Gate::authorize('edit-job', $job);
 
         return view('jobs.edit', ['job' => $job]);
     }
@@ -56,10 +61,10 @@ class JobController extends Controller
         //authorize (On hold......)
 
         $job->update([
-            'title'       => request('title'),
-            'salary'      => request('salary'),
+            'title' => request('title'),
+            'salary' => request('salary'),
             'description' => request('description'),
-            'location'    => fake()->city() . ', ' . fake()->stateAbbr(),
+            'location' => fake()->city() . ', ' . fake()->stateAbbr(),
         ]);
 
         //redirect to the job
