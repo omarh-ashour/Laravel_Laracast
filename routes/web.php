@@ -15,13 +15,16 @@ Route::view('/contact', 'contact');
 // Route::resource('jobs', JobController::class)->middleware('auth');
 //Route::controller(JobController::class)->group(function () {
 Route::get('jobs', [JobController::class, 'index']);
-Route::get('jobs/create', [JobController::class, 'create']);
+Route::get('jobs/create', [JobController::class, 'create'])
+->middleware('auth');
+
 Route::get('/jobs/{job}', [JobController::class, 'show']);
-Route::post('/jobs', [JobController::class, 'store'])->middleware('auth');
+Route::post('/jobs', [JobController::class, 'store'])
+->middleware('auth');
   
 Route::get('/jobs/{job}/edit', [JobController::class, 'edit'])
     ->middleware('auth')
-    ->can('edit-job,job');
+    ->can('edit,job');
 
 Route::patch('/jobs/{job}', [JobController::class, 'update']);
 Route::delete('jobs/{job}', [JobController::class, 'destroy']);
