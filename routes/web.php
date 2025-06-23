@@ -2,11 +2,22 @@
 
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\RegisteredUserController;
+use App\Mail\JobPosted;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use App\Models\Job;
 use App\Http\Controllers\SessionController;
+use Illuminate\Support\Facades\Mail;
+use App\Jobs\TranslateJob;
+//Test Mail
+Route::get('test',function(){
+    $job = Job::first();
+    TranslateJob::dispatch($job);
+    return 'Done';
+});
+
+
 //Home Route
 Route::view('/', 'home');
 //Contact Route

@@ -8,6 +8,8 @@ use App\Models\User;
 // use Illuminate\Auth\Access\Gate;  // removed, not needed
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\JobPosted;
 
 class JobController extends Controller
 {
@@ -34,13 +36,16 @@ class JobController extends Controller
             'title' => ['required', 'min:3', 'max:50'],
             'salary' => ['required'],
         ]);
-        Job::create([
+        $job = Job::create([
             'title' => request('title'),
             'salary' => request('salary'),
             'employer_id' => auth()->user()->employer->id,
             'description' => request('description'),
             'location' => '',
         ]);
+        Mail::to($job->employer->user)->queue(
+        new JobPosted($job)
+    );
         return redirect('/jobs');
     }
     public function edit(Job $job)
